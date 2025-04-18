@@ -24,5 +24,6 @@ USER node
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/config ./config
+EXPOSE 9002
 # Define the entrypoint
 CMD ["node", "dist/index.js"]
