@@ -36,7 +36,7 @@ jobs:
           docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app:${{ github.sha }} ./app
 
       - name: Scan image for vulnerabilities
-        uses: aquasecurity/trivy-action@v0.19.0
+        uses: aquasecurity/trivy-gh-action@v0.1.3
         with:
           image-ref: ${{ steps.login-ecr.outputs.registry }}/my-app:${{ github.sha }}
 
