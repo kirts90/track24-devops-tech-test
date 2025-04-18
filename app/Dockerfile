@@ -11,6 +11,12 @@ RUN npm ci
 COPY . .
 RUN npm run compile
 
+# Remove dev dependencies
+RUN npm prune --production
+
+# Remove unnecessary files to reduce image size
+RUN rm -rf src tests .git .github .vscode .eslintignore .eslintrc.js .prettierrc.json .npmrc README.md
+
 # Production Stage
 FROM node:20-alpine AS runner
 
