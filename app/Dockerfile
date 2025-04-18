@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY package*.json ./
+COPY config ./config
 
 # Create a non-root user and switch to it for secruity purposes
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
