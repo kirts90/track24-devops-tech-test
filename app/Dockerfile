@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install dependencies for prod
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci 
 
 # Copy source code
 COPY . .
