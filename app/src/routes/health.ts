@@ -1,4 +1,4 @@
-import { Router } from '@/lib/router';
+import { Router } from '../lib/router';
 
 export const healthRouter = new Router()
 
