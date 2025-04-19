@@ -3,7 +3,6 @@ name: Publish Image To ECR
 run-name: Triggered branch ${{ github.ref_name }} by @${{ github.actor }}
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -38,6 +37,21 @@ jobs:
             .
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+
+      # Add Trivy scanning for docker
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.61.1/trivy_0.61.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.61.1_Linux-64bit.deb
+
+      - name: Scan Docker image with Trivy
+        run: |
+          trivy image $REGISTRY_HOSTNAME/$IMAGE:$GITHUB_SHA \
+            --exit-code 1 \
+            --severity HIGH,CRITICAL  
+
       # Push the Docker image to AWS Container Registry
       - name: Publish To ECR
         run: |-
