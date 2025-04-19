@@ -1,5 +1,5 @@
-import { Router } from '../lib/router';
-import { geocodeMiddleware, homeMiddleware, schemaMiddlewareFactory } from '../middleware';
+import { Router } from '@/lib/router';
+import { geocodeMiddleware, homeMiddleware, schemaMiddlewareFactory } from '@/middleware';
 import compose from 'koa-compose';
 
 export function geolocationRouter(config: { google: { key: string } }) {
