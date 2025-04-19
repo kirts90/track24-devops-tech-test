@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-tech-application
+spec:
+  replicas: 2  # Ensures high availability so keep min 2.
+  selector:
+    matchLabels:
+      app: devops-tech-application
+  template:
+    metadata:
+      labels:
+        app: devops-tech-application
+    spec:
+      containers:
+      - name: devops-tech-application-container
+        image: devops443/track24-devops-tech-test:latest
+        ports:
+        - containerPort: 9002
+        env:
+        - name: APP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_PORT
+        - name: GOOGLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: google-key
+              key: GOOGLE_KEY
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"      

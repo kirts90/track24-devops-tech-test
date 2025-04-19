@@ -1,0 +1,12 @@
+# patch-service-nodeport.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-tech-application-service
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 9002
+      protocol: TCP
+      nodePort: 30080  # Optional: fixed nodePort (30000–32767)

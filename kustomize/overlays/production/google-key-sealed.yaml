@@ -1,0 +1,15 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: google-key
+  namespace: arun-lab-test
+spec:
+  encryptedData:
+    GOOGLE_KEY: AgCvmw1bBTDdIUbgNMmxkKdEtKv2hJfonyElIr/2hsK6UaVmFbJ0WHik5oolbM80B+L/bT0+riDVAUUsBj7xfb4BALiWSijzEDUhKFvxuEmOTQl/pqktr75IGYDneC5XsGfR0fI5K4CSV+pQbl+cAB/T1Kpf80MEI/XwqGRBr86VFCJAMerSOnUl+BDDVqPeT6EGyO7+VbFkoIwHLqaHZTGJexlCha4KNFQ1kOHnlJ+Jxzd/6u+lRfLxmZZ0JUaBKTbt21lLt6zPtVS8Bq/3sOfCsoZKYsMWGYV4ETAY3puQunRQFISKe6IFPTvtEuTJKTvConVhWnZFfm4xS96bJtndCG7ii6mBsFCb//xeAzD5Rg7rISp0ofdpGI+PBiYZyMT4nqJLd2SsCLrv4nBO5aDODbaaOUMZsJHkwKFnwqQn1lrGVa63xhWHeS1Z4NxQ7UnIB9ZavnMXZ2DXund98YtQud4t4XXe8hdnkRLX+fU/3rQ27wN1B8vHX9l/H9hPsFaXZa61QvB7x2HZhkTl8QDwUEzIy30e0Y50GyiPBLP9NZg4f/EEXWiDx3DANQFvnPKOZkLc+4uaNOWIPxkju+j+Ww0CPzW195i6WxI498gDUnrO6WO1t+xJJ3QBAMKxTwgQrZ6zKQ3sIdfQIUIXUMV+FwMhMjIRU5YTqQirIxj/OX+dZfjcHc2pmZ0g646hgd5XjyFzDK+zZo2BGjUIG9GEziWfeoRL6encO1gnLyQb+rSdWm4QX+w=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: google-key
+      namespace: arun-lab-test

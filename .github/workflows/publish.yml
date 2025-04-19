@@ -1,0 +1,59 @@
+name: Publish Image To ECR 
+
+run-name: Triggered branch ${{ github.ref_name }} by @${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  REGISTRY_HOSTNAME: ${{ vars.REGISTRY_HOSTNAME }}
+  IMAGE: track24
+
+jobs:
+  setup-build-publish:
+    name: Setup, Build, Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+    
+      # Build the Docker image
+      - name: Build Docker Image
+        run: |-
+          docker build \
+            -f Dockerfile \
+            --tag "$REGISTRY_HOSTNAME/$IMAGE:$GITHUB_SHA" \
+            .
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Add Trivy scanning for docker
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.61.1/trivy_0.61.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.61.1_Linux-64bit.deb
+
+      - name: Scan Docker image with Trivy
+        run: |
+          trivy image $REGISTRY_HOSTNAME/$IMAGE:$GITHUB_SHA \
+            --exit-code 1 \
+            --severity HIGH,CRITICAL  
+
+      # Push the Docker image to AWS Container Registry
+      - name: Publish To ECR
+        run: |-
+          docker push "$REGISTRY_HOSTNAME/$IMAGE:$GITHUB_SHA"
+          
