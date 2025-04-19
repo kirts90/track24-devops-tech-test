@@ -3,3 +3,4 @@ resources:
   - service.yml
   - secret.yml
   - hpa.yml
+  - ingress.yml
