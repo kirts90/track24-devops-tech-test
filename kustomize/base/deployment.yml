@@ -26,3 +26,8 @@ spec:
                 secretKeyRef:
                   name: my-app-secret
                   key: google-key
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "200m"
