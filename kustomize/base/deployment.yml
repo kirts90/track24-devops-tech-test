@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: dan-devops-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9002
+          env:
+            - name: APP_PORT
+              value: "9002"
+            - name: GOOGLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secret
+                  key: google-key
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "200m"
