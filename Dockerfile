@@ -10,26 +10,29 @@ COPY app/package*.json ./
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# Copy app
-COPY . .
+# Copy app source
+COPY app/. .
 
 # Run the app
 RUN npm run compile
 
+# Remove unwanted dependencies to reduce image size
+RUN npm prune --production
+
 # 2: Runtime Stage
-FROM node:20-alpine
+FROM node:20-alpine AS runner
 
 # Create a non-root user
 RUN addgroup -S inquiron && adduser -S inquiron -G inquiron
 
 WORKDIR /app
 
-# Copy only necessary files from the builder
+# Copy files from the builder
 COPY --from=builder /app /app
 
-# Set ownership and permissions
+# Set ownership and permissions - owner read perms, others read only
 RUN chown -R inquiron:inquiron /app && \
-    chmod -R 755 /app
+    chmod -R 644 /app
 
 USER inquiron
 
