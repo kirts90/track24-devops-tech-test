@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: my-app-image:latest
+          image: my-app:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 9002
           env:
             - name: APP_PORT
-              value: "8080"
+              value: "9002"
             - name: GOOGLE_KEY
               valueFrom:
                 secretKeyRef:
