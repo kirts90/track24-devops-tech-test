@@ -27,12 +27,12 @@ jobs:
         run: |
           docker build -t myapp:latest app/.
 
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Scan Docker image with Trivy before pushing to ECR
         uses: aquasecurity/trivy-action@master
@@ -42,15 +42,15 @@ jobs:
           severity: HIGH,CRITICAL
           exit-code: '1'
 
-      # - name: Login to Amazon ECR
-      #   id: login-ecr
-      #   uses: aws-actions/amazon-ecr-login@v2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-      # - name: If ECR repo does not exist, create it
-      #   run: |
-      #     aws ecr describe-repositories --repository-names my-app || \
-      #     aws ecr create-repository --repository-name my-app
+      - name: If ECR repo does not exist, create it
+        run: |
+          aws ecr describe-repositories --repository-names my-app || \
+          aws ecr create-repository --repository-name my-app
           
-      # - name: Push Docker image to ECR
-      #   run: |
-      #     docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Push Docker image to ECR
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
