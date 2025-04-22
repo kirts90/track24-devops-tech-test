@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myapp:latest ./app
+          docker build -t myapp:latest .
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
