@@ -4,14 +4,14 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Use cache by copying package files only first
-COPY app/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 COPY package*.json ./
 RUN npm ci
 
 # Copy app source
-COPY app/. .
+COPY . .
 
 # Run the app
 RUN npm run compile
@@ -27,8 +27,11 @@ RUN addgroup -S inquiron && adduser -S inquiron -G inquiron
 
 WORKDIR /app
 
-# Copy files from the builder
-COPY --from=builder /app /app
+# Copy files
+COPY package*.json ./
+COPY config ./config
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 
 # Set ownership and permissions - owner read perms, others read only
 RUN chown -R inquiron:inquiron /app && \
