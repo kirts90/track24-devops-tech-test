@@ -48,4 +48,3 @@ jobs:
         run: |
           aws ecr describe-repositories --repository-names my-app || \
           aws ecr create-repository --repository-name my-app
-        
