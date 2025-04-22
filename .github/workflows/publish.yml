@@ -34,7 +34,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Scan Docker image with Trivy before pushing to ECR
-        uses: aquasecurity/trivy-action@v0.16.1
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: myapp:latest
           format: 'table'
