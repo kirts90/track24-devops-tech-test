@@ -14,6 +14,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
+      IMAGE_TAG: ${{ secrets.IMAGE_TAG || github.sha }}
 
     steps:
       - name: Checkout code
@@ -48,3 +49,7 @@ jobs:
         run: |
           aws ecr describe-repositories --repository-names my-app || \
           aws ecr create-repository --repository-name my-app
+          
+      - name: Push Docker image to ECR
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG

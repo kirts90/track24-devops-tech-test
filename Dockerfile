@@ -8,7 +8,7 @@ COPY app/package*.json ./
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 # Copy app source
 COPY app/. .
