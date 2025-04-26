@@ -10,7 +10,12 @@
    - Made both environments easily runnable with clear documentation
 
 2. CI
-   *(To be implemented)*
+   - Implemented GitHub Actions workflow in `.github/workflows/publish.yml`
+   - Configured to trigger on push to main branch
+   - Set up Docker layer caching to minimize build times
+   - Configured AWS credentials and ECR login
+   - Added feature to idempotently create ECR repository if not exists
+   - Implemented tagging with both :latest and :commit-sha for traceability
 
 3. Kubernetes
    *(To be implemented)*
@@ -37,6 +42,17 @@ docker build -t my-api:dev -f app/Dockerfile.dev .
 # Run development image with hot-reloading
 docker run --rm -p 3001:3000 -e NODE_ENV=development -e APP_PORT=3000 \
   -v $(pwd)/app/src:/app/src -v $(pwd)/app/config:/app/config my-api:dev
+```
+
+**CI/CD Setup Requirements**
+```bash
+# Required GitHub repository secrets
+AWS_ROLE_ARN - IAM role ARN with ECR permissions
+
+# The workflow will:
+# 1. Build the Docker image from app/Dockerfile
+# 2. Push to ECR with tags :latest and :{commit-sha}
+# 3. Create ECR repository if it doesn't exist
 ```
 
 ### Checklist before requesting a review
