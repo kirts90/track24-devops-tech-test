@@ -18,7 +18,14 @@
    - Implemented tagging with both :latest and :commit-sha for traceability
 
 3. Kubernetes
-   *(To be implemented)*
+   - Implemented Kubernetes resources using Kustomize with base/overlay structure
+   - Created base configurations for Deployment, Service, Ingress, and HPA
+   - Set up local and production overlays with environment-specific configurations
+   - Securely managed GOOGLE_KEY as Kubernetes Secret
+   - Configured environment variables (APP_PORT, GOOGLE_KEY, NODE_ENV)
+   - Ensured high availability with multiple replicas (2 base, 3 prod) and rolling updates
+   - Implemented HPA based on 50% CPU utilization for auto-scaling
+   - Exposed service via NodePort (local) and LoadBalancer with NLB (production)
 
 4. Deployment
    *(To be implemented)*
@@ -48,11 +55,24 @@ docker run --rm -p 3001:3000 -e NODE_ENV=development -e APP_PORT=3000 \
 ```bash
 # Required GitHub repository secrets
 AWS_ROLE_ARN - IAM role ARN with ECR permissions
+GOOGLE_API_KEY - Google API key for geocoding service
 
 # The workflow will:
 # 1. Build the Docker image from app/Dockerfile
 # 2. Push to ECR with tags :latest and :{commit-sha}
 # 3. Create ECR repository if it doesn't exist
+```
+
+**Kubernetes Deployment**
+```bash
+# Create Google API key secret for local deployment
+kubectl create secret generic track24-api-secrets --from-literal=GOOGLE_API_KEY=<your-api-key>
+
+# Deploy to local Kubernetes
+kubectl apply -k kustomize/overlays/local
+
+# Deploy to production Kubernetes
+kubectl apply -k kustomize/overlays/production
 ```
 
 ### Checklist before requesting a review
