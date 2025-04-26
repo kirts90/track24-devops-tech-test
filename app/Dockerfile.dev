@@ -28,5 +28,11 @@ ENV NODE_ENV=development
 # Expose the application port
 EXPOSE 3000
 
+# Copy tsconfig-paths bootstrap
+COPY app/tsconfig-paths-bootstrap.js ./
+
+# Use NODE_ENV=development to use dev configuration
+ENV NODE_ENV=development
+
 # Run the application in development mode with hot-reloading
-CMD ["nodemon", "-r", "ts-node/register", "-r", "tsconfig-paths/register", "src/index.ts"]
+CMD ["node", "-r", "ts-node/register", "-r", "./tsconfig-paths-bootstrap.js", "src/index.ts"]
