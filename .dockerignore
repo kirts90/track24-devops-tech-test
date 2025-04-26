@@ -1,3 +1,4 @@
+# Ignore everything
 *
-!app/src
-!app/config
+# Except the app directory
+!app
