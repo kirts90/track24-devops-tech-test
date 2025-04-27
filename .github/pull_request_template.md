@@ -27,10 +27,41 @@
    - Implemented HPA based on 50% CPU utilization for auto-scaling
    - Exposed service via NodePort (local) and LoadBalancer with NLB (production)
 
-4. Deployment
-   *(To be implemented)*
+4. Terraform
+   - Implemented modular Terraform configuration for Kubernetes deployments
+   - Created environment-specific configurations for local and production
+   - Configured Terraform to work with both local Kubernetes and remote EKS clusters
+   - Added support for GitOps deployment using Kustomize and FluxCD
+   - Set up FluxCD components to automatically sync from Git repository
+   - Integrated with existing Kubernetes secrets
+   - Implemented dynamic resource allocation based on environment
+   - Configured backend storage for state management
+   - Added comprehensive documentation for deployment processes
 
 ### Document any other steps we need to follow
+
+**Prerequisites & Dependencies**
+```bash
+# Runtime dependencies with version management via asdf
+# Install asdf - https://asdf-vm.com/guide/getting-started.html
+# Add plugins and install required versions
+asdf plugin add nodejs
+asdf plugin add kustomize
+asdf plugin add terraform
+asdf plugin add kubectl
+asdf install nodejs 21.6.0
+asdf install kustomize 5.6.0
+asdf install terraform 1.5.0  # Recommended minimum version
+asdf install kubectl 1.27.3   # Recommended minimum version
+
+# Install FluxCD (required for GitOps deployment with Terraform)
+# Option 1: Using kubectl to install FluxCD CRDs and controllers
+kubectl apply -f https://github.com/fluxcd/flux2/releases/latest/download/install.yaml
+
+# Option 2: Using Flux CLI (if you have admin access to install CLI tools)
+curl -s https://fluxcd.io/install.sh | sudo bash
+flux install
+```
 
 **Building & Running Production Image**
 ```bash
@@ -55,7 +86,7 @@ docker run --rm -p 3001:3000 -e NODE_ENV=development -e APP_PORT=3000 \
 ```bash
 # Required GitHub repository secrets
 AWS_ROLE_ARN - IAM role ARN with ECR permissions
-GOOGLE_API_KEY - Google API key for geocoding service
+GOOGLE_API_KEY - Google API key for geocoding service (used in CI/CD pipeline)
 
 # The workflow will:
 # 1. Build the Docker image from app/Dockerfile
@@ -65,17 +96,40 @@ GOOGLE_API_KEY - Google API key for geocoding service
 
 **Kubernetes Deployment**
 ```bash
-# Create Google API key secret for local deployment
+# Create Google API key secret (needs to be done only once per environment)
 kubectl create secret generic track24-api-secrets --from-literal=GOOGLE_API_KEY=<your-api-key>
 
+# Option 1: Direct deployment with kubectl
 # Deploy to local Kubernetes
 kubectl apply -k kustomize/overlays/local
-
 # Deploy to production Kubernetes
 kubectl apply -k kustomize/overlays/production
+
+# Option 2: Terraform-managed deployment (recommended)
+# See Terraform Deployment section below - this handles both FluxCD setup and Kubernetes resources
+```
+
+**Terraform Deployment**
+```bash
+# Local deployment
+cd terraform/envs/local
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars if needed - Google API key field is optional if the secret already exists in the cluster
+terraform init
+terraform apply
+
+# Production deployment
+cd terraform/envs/production
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars to set your configuration - Google API key field is optional if the secret already exists in the cluster
+terraform init \
+  -backend-config="bucket=your-terraform-state-bucket" \
+  -backend-config="key=track24-api/terraform.tfstate" \
+  -backend-config="region=eu-west-2"
+terraform apply
 ```
 
 ### Checklist before requesting a review
 
-- [ ] I have performed a self-review of my code.
-- [ ] I have included any documentation relevant to review my changes.
+- [X] I have performed a self-review of my code.
+- [X] I have included any documentation relevant to review my changes.
