@@ -1,0 +1,8 @@
+namespace = "track24-local"
+create_namespace = true
+image_name = "my-api:dev"
+# Secret already exists in cluster
+# google_api_key = "YOUR_GOOGLE_API_KEY"
+use_kustomize = true
+git_repository_url = "https://github.com/kirts90/track24-devops-tech-test"
+git_branch = "main"

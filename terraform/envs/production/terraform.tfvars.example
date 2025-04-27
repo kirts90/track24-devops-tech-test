@@ -1,0 +1,11 @@
+aws_region = "eu-west-2"
+eks_cluster_name = "production-cluster"
+namespace = "track24-api"
+create_namespace = true
+ecr_repository_name = "track24-api"
+image_tag = "latest"
+# Secret already exists in cluster
+# google_api_key = "YOUR_GOOGLE_API_KEY"
+use_kustomize = true
+git_repository_url = "https://github.com/kirts90/track24-devops-tech-test"
+git_branch = "main"
